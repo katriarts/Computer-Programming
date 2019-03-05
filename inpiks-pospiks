@@ -1,0 +1,78 @@
+import java.util.Scanner; 
+public class InfixToPostfix { 
+
+    public static void main(String[] args) { 
+        Scanner sc = new Scanner(System.in); 
+        System.out.println("\tINFIX TO POSTFIX CONVERTER"); 
+        System.out.println("Enter an expression to be converted: "); 
+        String e = sc.nextLine(); 
+        System.out.println(" "); 
+        toPostfix(e); 
+    } 
+    
+    public static void toPostfix(String exp){ 
+        String output = ""; 
+        String stack = "#"; 
+        System.out.println("TOKEN\tSTACK\t\tOUTPUT"); 
+        for(int i = 4; i < exp.length(); i++){ 
+            if (exp.charAt(i) != ' ') {
+            char current = exp.charAt(i); 
+            int lastStack = stack.length() - 1; 
+            System.out.print(current + "\t"); 
+            if(Character.isLetterOrDigit(current)){ 
+                output += current; 
+            } else if(current == '('){ 
+                stack += current; 
+            } else if(current == ')'){ 
+                while(stack.charAt(lastStack) != '('){ 
+                    output += stack.charAt(lastStack); 
+                    lastStack -= 1; 
+                } 
+                stack = stack.substring(0,lastStack); 
+            } else { 
+                while(stack.length() != 1 && getISP(stack.charAt(lastStack)) >= getICP(current)){ 
+                    output += stack.charAt(lastStack); 
+                    stack = stack.substring(0,lastStack); 
+                    lastStack = stack.length() - 1; 
+                } 
+                if(current == '#'){ 
+                    stack = ""; 
+                } 
+                stack += current; 
+            } 
+        
+            System.out.println(stack + "\t\t" + output); 
+        }
+        } 
+    } 
+    
+    static int getISP(char c){ 
+        switch(c){ 
+            case '+': 
+            case '-': 
+                return 1; 
+            case '*': 
+            case '/': 
+            case '%': 
+                return 2; 
+            case '^': 
+                return 3; 
+        } 
+        return 0; 
+    } 
+    
+    static int getICP(char c){ 
+        switch(c){ 
+            case '+': 
+            case '-': 
+                return 1; 
+            case '*': 
+            case '/': 
+            case '%': 
+                return 2; 
+            case '^': 
+                return 4; 
+        } 
+        return 0; 
+    } 
+}
